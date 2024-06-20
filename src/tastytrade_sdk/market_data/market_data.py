@@ -19,24 +19,30 @@ class MarketData:
         self.__streamer_symbol_translations_factory = streamer_symbol_translations_factory
 
     def subscribe(self,
-                  symbols: List[str],
+                  subscriptions: List[dict] = None,
+                  symbols: List[str] = None,
                   on_candle: Callable[[dict], None] = None,
                   on_greeks: Callable[[dict], None] = None,
-                  on_quote: Callable[[dict], None] = None
+                  on_quote: Callable[[dict], None] = None,
+                  on_trade: Callable[[dict], None] = None
                   ) -> Subscription:
         """
         Subscribe to live feed data
+        :param subscriptions: Subscription dict as per dx feed api
         :param symbols: Symbols to subscribe to. Can be across multiple instrument types.
         :param on_candle: Handler for candle events
         :param on_greeks: Handler for greeks events
         :param on_quote: Handler for quote events
+        :param on_trade: Handler for trade events
         """
         data = self.__api.get('/quote-streamer-tokens')['data']
         return Subscription(
             data['dxlink-url'],
             data['token'],
-            self.__streamer_symbol_translations_factory.create(symbols),
+            subscriptions,
+            self.__streamer_symbol_translations_factory.create(symbols) if not subscriptions and symbols else None,
             on_candle=on_candle,
             on_greeks=on_greeks,
-            on_quote=on_quote
+            on_quote=on_quote,
+            on_trade=on_trade
         )
