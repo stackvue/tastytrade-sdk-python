@@ -28,16 +28,16 @@ DEFAULT_TRADE_FIELDS = ['eventSymbol', 'eventTime', 'time', 'timeNanoPart', 'seq
 DEFAULT_GREEKS_FIELDS = ['eventSymbol', 'eventTime', 'eventFlags', 'index', 'time', 'sequence', 'price', 'volatility',
                          'delta', 'gamma', 'theta', 'rho', 'vega']
 
-QUOTE_FIELDS = os.getenv('QUOTE_FIELDS', DEFAULT_QUOTE_FIELDS)
-CANDLE_FIELDS = os.getenv('CANDLE_FIELDS', DEFAULT_CANDLE_FIELDS)
-TRADE_FIELDS = os.getenv('TRADE_FIELDS', DEFAULT_TRADE_FIELDS)
-GREEKS_FIELDS = os.getenv('GREEKS_FIELDS', DEFAULT_GREEKS_FIELDS)
+QUOTE_FIELDS = os.getenv('QUOTE_FIELDS')
+CANDLE_FIELDS = os.getenv('CANDLE_FIELDS')
+TRADE_FIELDS = os.getenv('TRADE_FIELDS')
+GREEKS_FIELDS = os.getenv('GREEKS_FIELDS')
 
 FIELD_MAPPINGS = {
-    EventType.QUOTE: QUOTE_FIELDS,
-    EventType.CANDLE: CANDLE_FIELDS,
-    EventType.TRADE: TRADE_FIELDS,
-    EventType.GREEKS: GREEKS_FIELDS
+    EventType.QUOTE: DEFAULT_QUOTE_FIELDS if not QUOTE_FIELDS else QUOTE_FIELDS.split(','),
+    EventType.CANDLE: DEFAULT_CANDLE_FIELDS if not CANDLE_FIELDS else CANDLE_FIELDS.split(','),
+    EventType.TRADE: DEFAULT_TRADE_FIELDS if not TRADE_FIELDS else TRADE_FIELDS.split(','),
+    EventType.GREEKS: DEFAULT_GREEKS_FIELDS if not GREEKS_FIELDS else GREEKS_FIELDS.split(',')
 }
 
 

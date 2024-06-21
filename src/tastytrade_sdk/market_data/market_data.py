@@ -21,10 +21,10 @@ class MarketData:
     def subscribe(self,
                   subscriptions: List[dict] = None,
                   symbols: List[str] = None,
-                  on_candle: Callable[[dict], None] = None,
-                  on_greeks: Callable[[dict], None] = None,
-                  on_quote: Callable[[dict], None] = None,
-                  on_trade: Callable[[dict], None] = None
+                  on_candle: Callable[[list[dict]], None] = None,
+                  on_greeks: Callable[[list[dict]], None] = None,
+                  on_quote: Callable[[list[dict]], None] = None,
+                  on_trade: Callable[[list[dict]], None] = None
                   ) -> Subscription:
         """
         Subscribe to live feed data

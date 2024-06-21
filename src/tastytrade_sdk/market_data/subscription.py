@@ -46,10 +46,10 @@ class Subscription:
 
     def __init__(self, url: str, token: str, subscriptions: list[dict],
                  streamer_symbol_translations: StreamerSymbolTranslations,
-                 on_candle: Callable[[dict], None] = None,
-                 on_greeks: Callable[[dict], None] = None,
-                 on_quote: Callable[[dict], None] = None,
-                 on_trade: Callable[[dict], None] = None
+                 on_candle: Callable[[list[dict]], None] = None,
+                 on_greeks: Callable[[list[dict]], None] = None,
+                 on_quote: Callable[[list[dict]], None] = None,
+                 on_trade: Callable[[list[dict]], None] = None
                  ):
         """@private"""
 
@@ -139,25 +139,19 @@ class Subscription:
             msg_type = message[0][0]
         data = message[1]
         events = event_from_stream(data, msg_type)
-        for event in events:
-            self.__handle_feed_event(event, msg_type)
+        self.__handle_feed_event(events, msg_type)
         # parse type or warn for unknown type
 
-    def __handle_feed_event(self, event: dict, msg_type: EventType) -> None:
+    def __handle_feed_event(self, events: list[dict], msg_type: EventType) -> None:
         event_type = msg_type
-        if self.__subscriptions:
-            original_symbol = event['eventSymbol']
-        else:
-            original_symbol = self.__streamer_symbol_translations.get_original_symbol(event['eventSymbol'])
-        event['symbol'] = original_symbol
-        if event_type == 'Quote' and self.__on_quote:
-            self.__on_quote(event)
-        elif event_type == 'Candle' and self.__on_candle:
-            self.__on_candle(event)
-        elif event_type == 'Greeks' and self.__on_greeks:
-            self.__on_greeks(event)
-        elif event_type == 'Trade' and self.__on_trade:
-            self.__on_trade(event)
+        if event_type == EventType.QUOTE and self.__on_quote:
+            self.__on_quote(events)
+        elif event_type == EventType.CANDLE and self.__on_candle:
+            self.__on_candle(events)
+        elif event_type == EventType.GREEKS and self.__on_greeks:
+            self.__on_greeks(events)
+        elif event_type == EventType.TRADE and self.__on_trade:
+            self.__on_trade(events)
         else:
             logging.debug('Unhandled feed event type %s for symbol %s', event_type, original_symbol)
 

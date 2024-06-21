@@ -26,6 +26,9 @@ class RequestsSession:
             data={'login': login, 'password': password}
         )['data']['session-token']
 
+    def set_auth(self, token):
+        self.__session.headers['Authorization'] = token
+
     def request(self, method: str, path: str, params: Optional[QueryParams] = tuple(),
                 data: Optional[dict] = None) -> Optional[dict]:
         url = self.__url(path, params)
