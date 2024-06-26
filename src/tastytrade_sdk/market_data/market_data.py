@@ -40,7 +40,7 @@ class MarketData:
             data['dxlink-url'],
             data['token'],
             subscriptions,
-            self.__streamer_symbol_translations_factory.create(symbols) if not subscriptions and symbols else None,
+            self.__streamer_symbol_translations_factory.create(symbols) if subscriptions is None and symbols else None,
             on_candle=on_candle,
             on_greeks=on_greeks,
             on_quote=on_quote,

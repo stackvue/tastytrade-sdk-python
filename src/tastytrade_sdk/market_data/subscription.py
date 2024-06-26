@@ -70,7 +70,7 @@ class Subscription:
         self.__websocket = connect(self.__url)
         self.__receive_thread = LoopThread(self.__receive)
 
-        if self.__subscriptions:
+        if self.__subscriptions is not None:
             subscriptions = self.__subscriptions
         else:
             subscription_types = []
