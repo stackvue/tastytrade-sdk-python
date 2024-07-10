@@ -93,7 +93,12 @@ class Subscription:
         self.__send('CHANNEL_REQUEST', channel=1, service='FEED', parameters={'contract': 'AUTO'})
         self.__send('FEED_SETUP', channel=1, acceptAggregationPeriod=10, acceptDataFormat='COMPACT',
                     acceptEventFields=FIELD_MAPPINGS)
-        self.__send('FEED_SUBSCRIPTION', channel=1, add=subscriptions)
+
+        count = len(subscriptions)
+
+        for x in range(0, count, 1000):
+            y = min(x + 1000, count)
+            self.__send('FEED_SUBSCRIPTION', channel=1, add=subscriptions[x:y])
         return self
 
     def close(self) -> None:
